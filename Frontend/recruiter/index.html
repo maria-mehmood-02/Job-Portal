@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Page</title>
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+</head>
+
+<body>
+    <header></header>
+
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center align-content-center" style="margin-top: 10px;">
+            <button id="post-job" type="submit" class="btn btn-primary"> <i class="bi-plus-lg"></i> Post a new
+                job</button>
+        </div>
+        <div style="margin-left: 20em;">
+            <p> <em>Posted Jobs:</em> </p>
+            <div id="posts" class="m-3 d-flex">
+                <table>
+                    <tbody id="all-posts"></tbody>
+                </table>
+                <!-- <h2>Job Title</h2>
+                <button type="submit" id="view-post" class="btn btn-primary" style="margin-left: 25em;">View</button> -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('header').load('rec-header.html');
+        // $('#view-post').click(function (e) {
+        //     e.preventDefault();
+        //     window.location.replace('view-job-post.html');
+        // });
+        $('#post-job').click(function (e) {
+            e.preventDefault();
+            window.location.replace('post-job.html');
+        });
+        $(window).on("load", function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "GET",
+                url: "../../Backend/recruiter/view-posts.php",
+                success: function (response) {
+                    // console.log(response);
+                    const data = JSON.parse(response);
+                    $.each(data, function (key, value) {
+                        $('#all-posts').append('<tr><td><h2>' + value['job_title'] + '</h2></td>'
+                            + '<td><button type="submit" id="view-post" class="btn btn-primary" onclick="view_details(' + value['job_id'] + ')" style="margin-left: 25em;">View</button></td></tr>');
+                    });
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+        function view_details(id) {
+            // console.log(id);
+            $.ajax({
+                type: "POST",
+                url: "../../Backend/recruiter/view-single-post.php",
+                data: {
+                    id: id
+                },
+                dataType: "json",
+                success: function (response) {
+                    location.href = 'view-job-post.html?id=' + response.data['job_id'];
+                    // console.log(response.data);
+                },
+                error: function (err) {
+                    console.log("Cannot open");
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

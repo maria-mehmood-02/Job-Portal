@@ -1,0 +1,39 @@
+h1 {
+    margin: auto;
+}
+
+#link {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+#link:hover {
+    background-color: #9794949c;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    color: #000;
+}
+
+.bi-check2:hover {
+    color: #009200;
+}
+
+.bi-exclamation-circle:hover {
+    color: #b8b81c;
+}
+
+.bi-person-x:hover {
+    color: #c70000;
+}

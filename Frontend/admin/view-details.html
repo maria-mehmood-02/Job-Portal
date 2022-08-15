@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <!-- <script src="adminScript.js"></script> -->
+
+    <link rel="stylesheet" href="admin.css">
+
+    <title>Pending Users List</title>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <button id="goBack" class="btn btn-light" type="button"><i class="bi bi-arrow-left"></i></button>
+                <h1>Single User Details</h1>
+            </div>
+        </nav>
+    </header>
+    <div class="container-fluid">
+        <div class="row flex-nowrap">
+            <div id="sidebar" class="col-auto col-md-3 col-xl-2 px-sm-2 px-0 bg-secondary"></div>
+            <div class="col-md-10" style="padding-top: 5em; padding-left: 10em;">
+                <div id="single-data"></div>
+                <button id="approve" class="btn btn-primary">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $('#sidebar').load('admin-sidebar.html');
+        $('#goBack').click(function (e) {
+            e.preventDefault();
+            window.location.replace('pending-users.html');
+        });
+        $('#approve').on("click", function (e) {
+            e.preventDefault();
+            var url = new URL(window.location.href);
+            var u_id = url.searchParams.get("id");
+            $.ajax({
+                type: "POST",
+                url: "../../Backend/admin/mail.php",
+                data: {
+                    id: u_id
+                },
+                dataType: "json",
+                timeout: 30000,
+                success: function (response) {
+                    console.log(response);
+                    if (response.success == '1') {
+                        alert("Confirmation mail sent!");
+                        location.href = 'pending-users.html';
+                    } else {
+                        alert("Can not be able to send mail!");
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+        $(window).on("load", function (e) {
+            var url = new URL(window.location.href);
+            var u_id = url.searchParams.get("id");
+            console.log(u_id);
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "../../Backend/admin/view-details.php",
+                data: {
+                    id: u_id
+                },
+                dataType: "json",
+                success: function (response) {
+                    // console.log(response.data['first_name']);
+                    // $('#single-data').html('<h3>' + 'First Name' + '</h3>')
+                    let data = '';
+                    if (response.user_type == 'employeer') {
+                        let resume = response.data['resume'];
+
+                        data += '<h3>First Name: <em>' + response.data['first_name'] + '</em></h4>'
+                            + '<h4>Last Name: <em>' + response.data['last_name'] + '</em></h4>'
+                            + '<h4>DOB: <em>' + response.data['dob'] + '</em></h4>'
+                            + '<h4>Gender: <em>' + response.data['gender'] + '</em></h4>'
+                            + '<h4>Email Address: <em>' + response.data['email_address'] + '</em></h4>'
+                            + '<h4>Phone Number: <em>' + response.data['phone_number'] + '</em></h4>'
+                            + '<h4>Password: <em>' + response.data['password'] + '</em></h4>'
+                            + '<h4>User Type: <em>' + response.data['user_type'] + '</em></h4>'
+                            + '<h4>Resume: <em><a href="../../Resume/' + resume + '">' + response.data['resume'] + '</a></em></h4>';
+                        $('#single-data').html(data);
+                    } else if (response.user_type == 'recruiter') {
+                        data += '<h3>First Name: <em>' + response.data['first_name'] + '</em></h4>'
+                            + '<h4>Last Name: <em>' + response.data['last_name'] + '</em></h4>'
+                            + '<h4>DOB: <em>' + response.data['dob'] + '</em></h4>'
+                            + '<h4>Gender: <em>' + response.data['gender'] + '</em></h4>'
+                            + '<h4>Email Address: <em>' + response.data['email_address'] + '</em></h4>'
+                            + '<h4>Phone Number: <em>' + response.data['phone_number'] + '</em></h4>'
+                            + '<h4>Password: <em>' + response.data['password'] + '</em></h4>'
+                            + '<h4>User Type: <em>' + response.data['user_type'] + '</em></h4>'
+                            + '<h4>Company Name: <em>' + response.data['company_name'] + '</em></h4>'
+                            + '<h4>Experience: <em>' + response.data['experience'] + '</em></h4>';
+                        $('#single-data').html(data);
+                    }
+                    // location.href = '';
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>

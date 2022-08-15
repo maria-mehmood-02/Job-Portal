@@ -1,0 +1,53 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Actual */
+
+h1 {
+    margin: auto;
+}
+
+#link {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+#link:hover {
+    background-color: #9794949c;
+}
+
+.navbar {
+    margin-bottom: 0px;
+}
+
+a {
+    text-decoration: none;
+    color: #000;
+}
+
+a:hover {
+    color: #000;
+}
+
+#job-description {
+    margin-top: 5rem;
+}
+
+em {
+    font-size: 20px;
+}
+
+#btns {
+    margin-left: 25em;
+}
